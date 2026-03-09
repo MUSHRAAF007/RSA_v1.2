@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" style="height: auto; min-height: 100%;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSA Supervisor Dispatch</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          screens: {
+            'xs': '320px',
+            '3xl': '1920px',
+            '4k': '2560px',
+          },
+          fontFamily: {
+            heading: ['Space Grotesk', 'sans-serif'],
+            body: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            theme: {
+              bg1: '#FFF1F2', // Soft red gradient
+              bg2: '#FFE4E6',
+              bg3: '#FECDD3',
+              primary: '#E11D48', // Red supervisor theme
+              secondary: '#BE123C',
+              accent: '#FB7185',
+              text: '#1F2937',
+              textLight: '#6B7280',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulseSlow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'blob': 'blob 7s infinite',
+          },
+          keyframes: {
+            blob: {
+              '0%': { transform: 'translate(0px, 0px) scale(1)' },
+              '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+              '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+              '100%': { transform: 'translate(0px, 0px) scale(1)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body
+  class="font-body text-theme-text antialiased selection:bg-theme-primary selection:text-white overflow-x-hidden min-h-screen bg-gradient-to-br from-theme-bg1 via-theme-bg2 to-theme-bg3">
+
+  <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none will-change-transform">
+    <div
+      class="absolute top-[-10%] left-[-10%] w-[40rem] h-[40rem] rounded-full bg-[radial-gradient(circle,rgba(225,29,72,0.15)_0%,transparent_60%)] animate-blob">
+    </div>
+    <div
+      class="absolute top-[20%] right-[-10%] w-[40rem] h-[40rem] rounded-full bg-[radial-gradient(circle,rgba(190,18,60,0.1)_0%,transparent_60%)] animate-blob"
+      style="animation-delay: 2s;"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="fixed top-0 w-full z-40 glass-panel border-b border-white/50 shadow-sm">
+    <div class="w-full mx-auto px-4 md:px-8 h-[4rem] flex items-center justify-between relative z-10">
+      <div class="flex items-center gap-2 md:gap-4">
+        <div
+          class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-theme-primary/10 border border-theme-primary/30 flex items-center justify-center shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 text-theme-primary" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="font-heading text-sm sm:text-lg text-theme-text font-bold tracking-wider leading-tight">SUPERVISOR
+            DISPATCH</h1>
+          <div
+            class="flex items-center gap-2 text-[0.5rem] sm:text-[0.625rem] text-theme-textLight font-heading tracking-widest">
+            <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shrink-0"></span>
+            <span class="truncate">WHATSAPP ALERTS TERMINAL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="pt-[6rem] pb-[3rem] px-4 md:px-8 w-full mx-auto relative z-10">
+    <!-- DYNAMIC AGENT GRID -->
+    <div id="supervisor-grid"
+      class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 3xl:grid-cols-6 4k:grid-cols-8 gap-3 md:gap-4">
+      <!-- Agent cards will be injected here by JS -->
+    </div>
+  </main>
+
+  <!-- DISPATCH MODAL -->
+  <div id="dispatch-modal"
+    class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-red-200">
+      <div class="bg-theme-primary px-6 py-4 flex justify-between items-center">
+        <h3 class="font-heading font-bold text-white tracking-widest">🚨 DISPATCH ALERT</h3>
+        <button onclick="closeDispatchModal()" class="text-white hover:text-red-200 focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <form id="dispatch-form" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-heading tracking-widest text-slate-500 mb-1">TARGET AGENT</label>
+          <input type="text" id="dispatch-agent" readonly
+            class="w-full bg-slate-100 border border-slate-200 rounded-lg px-4 py-2 font-bold text-slate-700 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-heading tracking-widest text-slate-500 mb-1">VEHICLE NUMBER</label>
+          <input type="text" id="dispatch-vehicle" required placeholder="e.g. MH01A1234"
+            class="w-full border border-slate-300 rounded-lg px-4 py-2 font-mono uppercase focus:ring-2 focus:ring-theme-primary focus:border-theme-primary outline-none transition">
+        </div>
+
+        <div>
+          <label class="block text-xs font-heading tracking-widest text-slate-500 mb-1">URGENCY REQUIREMENT</label>
+          <select id="dispatch-req" required
+            class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-theme-primary focus:border-theme-primary outline-none transition bg-white cursor-pointer font-medium">
+            <option value="" disabled selected>Select WhatsApp Request...</option>
+            <option value="Call Back ASP">Call Back ASP</option>
+            <option value="Call back Customer">Call back Customer</option>
+            <option value="Required Cab">Required Cab</option>
+            <option value="Customer is Irate">Customer is Irate</option>
+            <option value="Woman Assist">Woman Assist</option>
+          </select>
+        </div>
+
+        <div class="pt-4">
+          <button type="submit" id="btn-submit-dispatch"
+            class="w-full bg-theme-primary hover:bg-theme-secondary text-white font-heading font-bold tracking-widest py-3 rounded-lg shadow-lg hover:shadow-xl transition-all flex justify-center items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            SEND ALERT NOW
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="supervisor.js"></script>
+</body>
+
+</html>
